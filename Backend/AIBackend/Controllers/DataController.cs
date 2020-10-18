@@ -20,7 +20,8 @@ namespace AIBackend.Controllers
         [HttpPost("pesquisar")]
         public async Task<IActionResult> Pesquisar()
         {
-            var handler = factory.ObterHandler(Dominio.TipoPesquisaEnum.Filme);
+            var pesquisaHandler = factory.ObterHandler(Dominio.TipoPesquisaEnum.Filme);
+            return Ok(pesquisaHandler.Pesquisar(null));
         }
     }
 }
