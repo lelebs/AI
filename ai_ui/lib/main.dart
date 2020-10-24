@@ -1,5 +1,6 @@
 import 'package:ai_ui/scanner.utils.dart';
 import 'package:camera/camera.dart' as defaultCamera;
+import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeCamera();
+  }
+
   defaultCamera.CameraController _camera;
 
   bool _isDetecting = false;
@@ -43,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final TextRecognizer _textRecognizer =
       FirebaseVision.instance.textRecognizer();
+
   void _initializeCamera() async {
     var cameras = await defaultCamera.availableCameras();
 
@@ -87,18 +95,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'You have pushed the button this many times:',
-              ),
-            ],
-          ),
-        ));
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          _camera == null
+              ? Container(
+                  color: Colors.black,
+                )
+              : Container(
+                  height: MediaQuery.of(context).size.height - 150,
+                  child: CameraPreview(_camera)),
+        ],
+      ),
+    );
   }
 }
