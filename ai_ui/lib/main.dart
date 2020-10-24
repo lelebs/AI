@@ -1,9 +1,10 @@
-import 'package:camera/camera.dart';
+import 'package:ai_ui/scanner.utils.dart';
+import 'package:camera/camera.dart' as defaultCamera;
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'camerautils.dart';
+VisionText _textScanResults;
 
 void main() {
   runApp(MyApp());
@@ -34,10 +35,54 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  defaultCamera.CameraController _camera;
+
   bool _isDetecting = false;
-  CameraLensDirection _direction = CameraLensDirection.back;
-  var _camera;
-  var _scanResults;
+
+  VisionText _textScanResults;
+
+  final TextRecognizer _textRecognizer =
+      FirebaseVision.instance.textRecognizer();
+  void _initializeCamera() async {
+    var cameras = await defaultCamera.availableCameras();
+
+    final defaultCamera.CameraDescription description = cameras
+        .where((element) =>
+            element.lensDirection == defaultCamera.CameraLensDirection.back)
+        .first;
+
+    _camera = defaultCamera.CameraController(
+        description, defaultCamera.ResolutionPreset.high);
+
+    await _camera.initialize();
+
+    _camera.startImageStream((defaultCamera.CameraImage image) {
+      if (_isDetecting) return;
+
+      setState(() {
+        _isDetecting = true;
+      });
+      ScannerUtils.detect(
+        image: image,
+        detectInImage: _getDetectionMethod(),
+        imageRotation: description.sensorOrientation,
+      ).then(
+        (results) {
+          setState(() {
+            if (results != null) {
+              setState(() {
+                _textScanResults = results;
+              });
+            }
+          });
+        },
+      ).whenComplete(() => _isDetecting = false);
+    });
+  }
+
+  Future<VisionText> Function(FirebaseVisionImage image) _getDetectionMethod() {
+    return _textRecognizer.processImage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,46 +100,5 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ));
-  }
-
-  void _initializeCamera() async {
-    CameraDescription description = await getCamera(_direction);
-    ImageRotation rotation = rotationIntToImageRotation(
-      description.sensorOrientation,
-    );
-
-    _camera = CameraController(
-      description,
-      defaultTargetPlatform == TargetPlatform.iOS
-          ? ResolutionPreset.low
-          : ResolutionPreset.medium,
-    );
-    await _camera.initialize();
-
-    _camera.startImageStream((CameraImage image) {
-      if (_isDetecting) return;
-
-      _isDetecting = true;
-
-      detect(image, _getDetectionMethod(), rotation).then(
-        (dynamic result) {
-          setState(() {
-            _scanResults = result;
-          });
-
-          _isDetecting = false;
-        },
-      ).catchError(
-        (_) {
-          _isDetecting = false;
-        },
-      );
-    });
-  }
-
-  HandleDetection _getDetectionMethod() {
-    final FirebaseVision mlVision = FirebaseVision.instance;
-    mlVision.imageLabeler();
-    return mlVision.labelDetector().detectInImage;
   }
 }

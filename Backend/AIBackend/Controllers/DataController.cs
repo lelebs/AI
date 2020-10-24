@@ -1,4 +1,5 @@
-﻿using AIBackend.Dominio.Interfaces;
+﻿using AIBackend.Dominio;
+using AIBackend.Dominio.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -18,10 +19,10 @@ namespace AIBackend.Controllers
         }
 
         [HttpPost("pesquisar")]
-        public async Task<IActionResult> Pesquisar()
+        public async Task<IActionResult> Pesquisar([FromBody] PesquisarCommand command)
         {
-            var pesquisaHandler = factory.ObterHandler(Dominio.TipoPesquisaEnum.Filme);
-            return Ok(pesquisaHandler.Pesquisar(null));
+            var pesquisaHandler = factory.ObterHandler((TipoPesquisaEnum)command.TipoPesquisa);
+            return Ok(pesquisaHandler.Pesquisar(command));
         }
     }
 }
