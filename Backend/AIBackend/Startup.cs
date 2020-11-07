@@ -32,6 +32,17 @@ namespace AIBackend
             services.AddScoped<PesquisarFilmeCommandHandler>();
             services.AddScoped<PesquisarLivroCommandHandler>();
             services.AddScoped<IPesquisarFactoryHandler, PesquisarFactoryHandler>();
+
+            services.AddCors(option =>
+            {
+                option.AddDefaultPolicy(options =>
+                {
+                    options.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin()
+                        .Build();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +52,8 @@ namespace AIBackend
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors();
 
             app.UseHttpsRedirection();
 

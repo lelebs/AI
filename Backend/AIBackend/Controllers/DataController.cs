@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AIBackend.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Produces("application/json")]
     [Route("api/data")]
     public class DataController : Controller

@@ -10,7 +10,36 @@
       "client_info": {
         "mobilesdk_app_id": "1:846163751210:android:93ecda1e6108b366a0ee53",
         "android_client_info": {
-          "package_name": "com.example.ai_ui"
+          "package_name": "com.leandro.ai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846163751210-piavjde5ic12n1492vo19v752amans9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiiU-nk7k8BvvaO5WppcVKUTd1sSSyoZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846163751210-piavjde5ic12n1492vo19v752amans9l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846163751210:android:0f14916e4bb66821a0ee53",
+        "android_client_info": {
+          "package_name": "com.leandro.ai_ui"
         }
       },
       "oauth_client": [
