@@ -1,76 +1,99 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class Login extends StatefulWidget{
+import 'package:ai_ui/utils/router.utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:toast/toast.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/loginModel.dart';
+import '../utils/error.utils.dart';
+
+import '../constants.dart' as Constants;
+import 'homePage.dart';
+
+class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login>{
+class _LoginState extends State<Login> {
   final email = TextEditingController();
   final senha = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-    );
-  }
-
-  Widget _getContainer(){
-    return new SingleChildScrollView(
-      child: Container(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    RichText(
-                    textAlign: TextAlign.center,
-                      text: TextSpan(
-                          text: 'F',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'oo',
-                              style: TextStyle(color: Color(0xff5d0dff), fontSize: 30),
-                            ),
-                            TextSpan(
-                              text: 'tunity',
-                              style: TextStyle(color: Colors.black, fontSize: 30),
-                            ),
-                          ]
-                      ),
-                    ),
-                    SizedBox(
-                      height: 80,
-                    ),
-                    textField('Email: ', email),
-                    textField('Senha: ', senha, senha: true),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    _getBtnEntrar(),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    _getBtnRegistrar(),
-                  ],
-                ),
-              ),
-            ],
-          )
+    return new Scaffold(
+      body: Center(
+        child: mainContainer(),
       ),
     );
   }
 
-  Widget textField(String title, TextEditingController controler,{bool senha = false}){
+  bool _verificarLogin() {
+    if (email.text == '' || senha.text == '') {
+      showDialogError(
+          context, true, "Preenchimento obrigatório: [Login] e [Senha]");
+      return false;
+    }
+
+    return true;
+  }
+
+  Widget mainContainer() {
+    return new SingleChildScrollView(
+      child: Container(
+          child: Stack(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text: 'F',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'oo',
+                          style:
+                              TextStyle(color: Color(0xff5d0dff), fontSize: 30),
+                        ),
+                        TextSpan(
+                          text: 'tunity',
+                          style: TextStyle(color: Colors.black, fontSize: 30),
+                        ),
+                      ]),
+                ),
+                SizedBox(
+                  height: 80,
+                ),
+                textField('Email: ', email),
+                textField('Senha: ', senha, senha: true),
+                SizedBox(
+                  height: 30,
+                ),
+                buttonEntrarWidget(),
+                SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
+          ),
+        ],
+      )),
+    );
+  }
+
+  Widget textField(String title, TextEditingController controler,
+      {bool senha = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -88,8 +111,7 @@ class _LoginState extends State<Login>{
             decoration: InputDecoration(
                 border: InputBorder.none,
                 fillColor: Color(0xfff3f3f4),
-                filled: true
-            ),
+                filled: true),
             controller: controler,
           )
         ],
@@ -97,7 +119,7 @@ class _LoginState extends State<Login>{
     );
   }
 
-  Widget _getBtnEntrar() {
+  Widget buttonEntrarWidget() {
     return InkWell(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 15),
@@ -109,80 +131,46 @@ class _LoginState extends State<Login>{
                     color: Colors.grey.shade200,
                     offset: Offset(2, 4),
                     blurRadius: 5,
-                    spreadRadius: 2
-                )
+                    spreadRadius: 2)
               ],
               gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [Color(0xff8800ff), Color(0xff5d0dff)]
-              )
-          ),
+                  colors: [Color(0xff8800ff), Color(0xff5d0dff)])),
           child: Text(
             'Entrar',
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
         onTap: () async {
-          if(_verificarLogin()) {
+          if (_verificarLogin()) {
             var user = new LoginModel(email.text, senha.text);
             var body = json.encode(user);
-            try{
-              var response = await http.post(constants.AuthAPILink + '/generatetoken', body: body, headers: { "content-type": "application/json; charset=utf-8"});
-              if(response.statusCode == 200) {
+            try {
+              var response = await http.post(
+                  Constants.AuthAPILink + 'generatetoken',
+                  body: body,
+                  headers: {"content-type": "application/json; charset=utf-8"});
+              if (response.statusCode == 200) {
                 var retorno = json.decode(response.body);
-                var preferences = await SharedPreferences.getInstance();
-                preferences.setString(constants.LoginKey, retorno['token'].toString());
-                preferences.setString(constants.AuthKey, json.encode(retorno['auth']));
-                await toast.Fluttertoast.showToast(
-                    backgroundColor: Colors.green,
-                    msg: "Login realizado com sucesso!",
-                    toastLength: Toast.LENGTH_SHORT
-                );
-                Navigator.push(context, RouterService.buildRoute(HomePage(), preferences));
-              }
-              else{
+                var prefs = FlutterSecureStorage();
+                await prefs.write(
+                    key: Constants.LoginKey,
+                    value: retorno['token'].toString());
+                await prefs.write(
+                    key: Constants.AuthKey,
+                    value: json.encode(retorno['auth']));
+                Toast.show("Login realizado com sucesso!", context);
+                Navigator.push(
+                    context, await RouterService.buildRoute(HomePage()));
+              } else {
                 throw new Exception();
               }
-            }
-            catch(value) {
-              retornarDialog(context, 'Ocorreu um erro ao realizar login. Verifique seu usuário e senha');
+            } catch (value) {
+              showDialogError(context, true,
+                  'Ocorreu um erro ao realizar login. Verifique seu usuário e senha');
             }
           }
-        }
-    );
-  }
-
-  Widget _getBtnRegistrar(){
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'Ainda não tem uma conta ?',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          InkWell(
-              onTap: (){
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => RegistrarPage()));
-              },
-              child: Text(
-                'Registrar',
-                style: TextStyle(
-                    color: Color(0xff5d0dff),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600
-                ),
-              )
-          ),
-        ],
-      ),
-    );
+        });
   }
 }

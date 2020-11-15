@@ -1,44 +1,18 @@
-import 'dart:developer';
-
 import 'package:ai_ui/utils/scanner.utils.dart';
 import 'package:ai_ui/utils/text_detector_painter.dart';
 import 'package:camera/camera.dart' as defaultCamera;
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-VisionText _textScanResults;
-
-void main() {
-  runApp(MyApp());
-}
 
 typedef HandleDetection = Future<dynamic> Function(FirebaseVisionImage image);
 
-class MyApp extends StatelessWidget {
+class TextRecognizerPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  _TextRecognizerState createState() => _TextRecognizerState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _TextRecognizerState extends State<TextRecognizerPage> {
   @override
   void initState() {
     super.initState();
