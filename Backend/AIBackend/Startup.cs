@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 using AIBackend.Dominio.Interfaces;
 using AIBackend.Handler;
+using AIBackend.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,11 +29,16 @@ namespace AIBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
 
             services.AddScoped<PesquisarFilmeCommandHandler>();
             services.AddScoped<PesquisarLivroCommandHandler>();
             services.AddScoped<IPesquisarFactoryHandler, PesquisarFactoryHandler>();
+            services.AddScoped(typeof(ConnectionHandler));
+            services.AddScoped<ILoginRepository, LoginRepository>() ;
+            services.AddScoped(typeof(JwtSecurityTokenHandler));
+            services.AddScoped<IJwtGenerationCommandHandler, JwtGenerationCommandHandler>();
+            services.AddRouting();
+            services.AddControllers();
 
             services.AddCors(option =>
             {
@@ -53,14 +60,14 @@ namespace AIBackend
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors();
-
-            app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            app.UseAuthorization();
-
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

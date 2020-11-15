@@ -1,4 +1,5 @@
-﻿using AIBackend.Dominio.Interfaces;
+﻿using AIBackend.Dominio;
+using AIBackend.Dominio.Interfaces;
 using AIBackend.Dominio.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace AIBackend.Controllers
 {
+    [ApiController]
     [AllowAnonymous]
     [Produces("application/json")]
     [Route("api/auth")]
@@ -21,8 +23,11 @@ namespace AIBackend.Controllers
         {
             try
             {
-                var user = await loginRepository.Obter(authModel);
-                return Ok(new { Token = handler.GenerateToken(user), Auth = user });
+                var user = await loginRepository.ObterLogin(authModel);
+                if (user != null)
+                    return Ok(new { Token = handler.GenerateToken((JwtGenerationCommand)user), Auth = user });
+                else
+                    return Unauthorized();
             }
             catch (Exception ex)
             {

@@ -8,10 +8,11 @@ namespace AIBackend
     public class ConnectionHandler : IDbConnection
     {
         public string Padrao { get; set; }
+        private readonly IConfiguration configuration;
 
         public ConnectionHandler(IConfiguration configuration)
         {
-            Padrao = configuration.GetConnectionString("AI");
+            this.configuration = configuration;
         }
 
         NpgsqlConnection connection;
@@ -61,10 +62,9 @@ namespace AIBackend
             connection.Open();
         }
 
-        public NpgsqlConnection Create(string connectionString = null)
+        public NpgsqlConnection Create()
         {
-            if (connectionString != null)
-                this.Padrao = connectionString;
+            Padrao = configuration.GetConnectionString("AI");
 
             try
             {

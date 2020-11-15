@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      text: 'F',
+                      text: 'A',
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w700,
@@ -62,13 +62,8 @@ class _LoginState extends State<Login> {
                       ),
                       children: [
                         TextSpan(
-                          text: 'oo',
-                          style:
-                              TextStyle(color: Color(0xff5d0dff), fontSize: 30),
-                        ),
-                        TextSpan(
-                          text: 'tunity',
-                          style: TextStyle(color: Colors.black, fontSize: 30),
+                          text: 'I',
+                          style: TextStyle(color: Colors.blue, fontSize: 30),
                         ),
                       ]),
                 ),
@@ -110,7 +105,7 @@ class _LoginState extends State<Login> {
             obscureText: senha,
             decoration: InputDecoration(
                 border: InputBorder.none,
-                fillColor: Color(0xfff3f3f4),
+                fillColor: Colors.grey[200],
                 filled: true),
             controller: controler,
           )
@@ -136,7 +131,7 @@ class _LoginState extends State<Login> {
               gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [Color(0xff8800ff), Color(0xff5d0dff)])),
+                  colors: [Colors.blue, Colors.blue])),
           child: Text(
             'Entrar',
             style: TextStyle(fontSize: 20, color: Colors.white),

@@ -1,3 +1,5 @@
+import 'package:ai_ui/Routes/textRecognizerPage.dart';
+import 'package:ai_ui/Utils/router.utils.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -22,20 +24,33 @@ class MyStatefulWidget extends StatefulWidget {
 
 /// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  BuildContext thatContext;
+
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
+  static List<Widget> _widgetOptions = <Widget>[
+    Scaffold(
+      body: Center(
+        child: const Text(
+          'Bem vindo ao AI \n \nPressione o ícone da câmera para escanear',
+          textAlign: TextAlign.center,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          Navigator.push(thatContext,
+              await RouterService.buildRoute(TextRecognizerPage()));
+        },
+        child: Icon(Icons.camera_alt),
+      ),
     ),
     Text(
       'Index 1: Business',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Sobre o aplicativo',
       style: optionStyle,
     ),
   ];
@@ -48,9 +63,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+        title: const Text('AI'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -62,16 +78,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.history),
+            label: 'Histórico',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.info_outline),
+            label: 'Sobre',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.blue,
         onTap: _onItemTapped,
       ),
     );
