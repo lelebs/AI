@@ -1,6 +1,13 @@
-import 'package:ai_ui/Routes/textRecognizerPage.dart';
-import 'package:ai_ui/Utils/router.utils.dart';
+import 'package:ai_ui/models/dataModel.dart';
+
+import '../constants.dart' as Constants;
+import 'package:ai_ui/services/router.service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+
+GetIt locator = GetIt();
+
+final List<DataModel> listao = [new DataModel('titulozada','descrito')];
 
 class HomePage extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
@@ -27,6 +34,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   BuildContext thatContext;
 
   int _selectedIndex = 0;
+  static TextEditingController textController = TextEditingController(text: 'Desenvolvido por: Leandro Gabatel');
+  static TextEditingController versionTextController = TextEditingController(text: 'Versão 1.0');
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static List<Widget> _widgetOptions = <Widget>[
@@ -38,21 +47,55 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Navigator.push(thatContext,
-              await RouterService.buildRoute(TextRecognizerPage()));
+        onPressed: () {
+          locator<NavigationService>(). navigateTo(Constants.TextRecognizerPage);
         },
         child: Icon(Icons.camera_alt),
       ),
     ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
+    Stack(
+      children: [
+        new Container(
+          child:
+            ListView.builder(
+              itemCount: listao.length,
+              itemBuilder: (BuildContext context, int index) {  
+                return Stack(children: [
+                  Container(
+                    child: Text(listao[index].titulo),
+                    height: 50,
+                  ),
+                  Container(
+                    child: Text(listao[index].descricao),
+                    height: 50,
+                  ),
+                ]);
+              },
+            )
+        )
+      ],
+      
     ),
-    Text(
-      'Sobre o aplicativo',
-      style: optionStyle,
-    ),
+    SingleChildScrollView(
+      padding: new EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextField(
+           readOnly: true,
+           controller: textController,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+           readOnly: true,
+           controller: versionTextController,
+          )
+        ],
+      ) ,
+    )
+
   ];
 
   void _onItemTapped(int index) {
@@ -63,7 +106,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
     return Scaffold(
       appBar: AppBar(
         title: const Text('AI'),
