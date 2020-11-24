@@ -37,6 +37,8 @@ namespace AIBackend
             services.AddScoped<ILoginRepository, LoginRepository>() ;
             services.AddScoped(typeof(JwtSecurityTokenHandler));
             services.AddScoped<IJwtGenerationCommandHandler, JwtGenerationCommandHandler>();
+            services.AddScoped<IPesquisaRepositorio, PesquisaRepositorio>();
+            services.AddScoped<IPesquisaItemRepositorio, PesquisaItemRepositorio>();
             services.AddRouting();
             services.AddControllers();
 

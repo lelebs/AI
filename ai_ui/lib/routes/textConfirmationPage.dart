@@ -28,6 +28,8 @@ class TextConfirmationState extends State<TextConfirmationPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          await FlutterSecureStorage().delete(key: Constants.LastRead);
+          
         },
         child: Icon(Icons.check),
       ),      
@@ -51,7 +53,8 @@ class TextConfirmationState extends State<TextConfirmationPage> {
                 e.descricao
               )
             )).toList(), 
-            onChanged: (value) => setState(() => opcaoSelecionada = value))
+            onChanged: (value) => setState(() => opcaoSelecionada = value)
+          ),
         ],
       )
     );

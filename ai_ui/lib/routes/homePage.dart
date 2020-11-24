@@ -10,6 +10,7 @@ GetIt locator = GetIt.instance;
 
 final List<DataModel> listao = [new DataModel('titulozada','descrito')];
 
+
 class HomePage extends StatelessWidget {
   static const String _title = 'Flutter Code Sample';
 
@@ -49,12 +50,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          try{
-            await locator<NavigationService>().navigateTo(Constants.TextConfirmationPage);
-          }
-          catch(value){
-            
-          }
+          await locator<NavigationService>().navigateTo(Constants.TextConfirmationPage);
         },
         child: Icon(Icons.camera_alt),
       ),

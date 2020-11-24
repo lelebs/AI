@@ -2,7 +2,7 @@
 {
     public enum TipoPesquisaEnum
     {
-        Filme = 1,
-        Livro = 2,
+        Livro = 1,
+        Filme = 2,
     }
 }

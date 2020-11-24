@@ -1,6 +1,7 @@
 ﻿using AIBackend.Dominio;
 using AIBackend.Dominio.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace AIBackend.Controllers
@@ -20,8 +21,15 @@ namespace AIBackend.Controllers
         [HttpPost("pesquisar")]
         public async Task<IActionResult> Pesquisar([FromBody] PesquisarCommand command)
         {
-            var pesquisaHandler = factory.ObterHandler((TipoPesquisaEnum)command.TipoPesquisa);
-            return Ok(pesquisaHandler.Pesquisar(command));
+            try
+            {
+                var pesquisaHandler = factory.ObterHandler((TipoPesquisaEnum)command.TipoPesquisa);
+                return Ok(await pesquisaHandler.Pesquisar(command));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }
