@@ -1,11 +1,12 @@
 import 'package:ai_ui/models/dataModel.dart';
+import 'package:ai_ui/utils/error.utils.dart';
 
 import '../constants.dart' as Constants;
 import 'package:ai_ui/services/router.service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-GetIt locator = GetIt();
+GetIt locator = GetIt.instance;
 
 final List<DataModel> listao = [new DataModel('titulozada','descrito')];
 
@@ -47,8 +48,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          locator<NavigationService>(). navigateTo(Constants.TextRecognizerPage);
+        onPressed: () async {
+          try{
+            await locator<NavigationService>().navigateTo(Constants.TextConfirmationPage);
+          }
+          catch(value){
+            
+          }
         },
         child: Icon(Icons.camera_alt),
       ),

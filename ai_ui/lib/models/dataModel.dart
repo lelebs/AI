@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class DataModel{
   DataModel(String s, String t){
    this.titulo = s;

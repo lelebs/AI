@@ -1,9 +1,13 @@
+import 'package:ai_ui/services/router.service.dart';
 import 'package:ai_ui/utils/scanner.utils.dart';
 import 'package:ai_ui/utils/text_detector_painter.dart';
 import 'package:camera/camera.dart' as defaultCamera;
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
+import '../constants.dart' as Constants;
 
 typedef HandleDetection = Future<dynamic> Function(FirebaseVisionImage image);
 
@@ -86,12 +90,13 @@ class _TextRecognizerState extends State<TextRecognizerPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           _camera = null;
-          Text(_textScanResults.blocks.take(1).first.text);
+          var prefs = FlutterSecureStorage();
+          await prefs.write(key: Constants.LastRead, value: _textScanResults.text);
+          await GetIt.instance<NavigationService>().navigateTo(Constants.TextConfirmationPage);
         },
-        child: Icon(Icons.navigation),
-        backgroundColor: Colors.green,
+        child: Icon(Icons.arrow_forward_ios),
       ),
     );
   }

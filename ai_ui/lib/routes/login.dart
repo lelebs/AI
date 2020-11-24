@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:ai_ui/services/router.service.dart';
 import 'package:ai_ui/utils/router.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 
@@ -156,8 +158,7 @@ class _LoginState extends State<Login> {
                     key: Constants.AuthKey,
                     value: json.encode(retorno['auth']));
                 Toast.show("Login realizado com sucesso!", context);
-                Navigator.push(
-                    context, await RouterService.buildRoute(HomePage()));
+                GetIt.instance<NavigationService>().navigateTo('home');
               } else {
                 throw new Exception();
               }
