@@ -1,4 +1,6 @@
 import 'package:ai_ui/models/dropDownModel.dart';
+import 'package:ai_ui/models/pesquisaCommand.dart';
+import 'package:ai_ui/routes/pesquisaResultsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,7 +31,8 @@ class TextConfirmationState extends State<TextConfirmationPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await FlutterSecureStorage().delete(key: Constants.LastRead);
-          
+          var pesquisaCommand = new PesquisaCommand(textController.text, opcaoSelecionada.id);
+          await Navigator.push(context, MaterialPageRoute(builder: (context) => PesquisaResultsPage(pesquisaCommand)));
         },
         child: Icon(Icons.check),
       ),      

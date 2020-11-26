@@ -1,5 +1,4 @@
 import 'package:ai_ui/models/dataModel.dart';
-import 'package:ai_ui/utils/error.utils.dart';
 
 import '../constants.dart' as Constants;
 import 'package:ai_ui/services/router.service.dart';
@@ -38,8 +37,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   static TextEditingController textController = TextEditingController(text: 'Desenvolvido por: Leandro Gabatel');
   static TextEditingController versionTextController = TextEditingController(text: 'Versão 1.0');
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   static List<Widget> _widgetOptions = <Widget>[
     Scaffold(
       body: Center(
@@ -50,7 +48,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await locator<NavigationService>().navigateTo(Constants.TextConfirmationPage);
+          await locator<NavigationService>().navigateTo(Constants.TextRecognizerPage);
         },
         child: Icon(Icons.camera_alt),
       ),

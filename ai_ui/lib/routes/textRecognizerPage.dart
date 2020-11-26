@@ -91,9 +91,9 @@ class _TextRecognizerState extends State<TextRecognizerPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          _camera = null;
+          var textoReconhecido = _textScanResults.text;
           var prefs = FlutterSecureStorage();
-          await prefs.write(key: Constants.LastRead, value: _textScanResults.text);
+          await prefs.write(key: Constants.LastRead, value: textoReconhecido);
           await GetIt.instance<NavigationService>().navigateTo(Constants.TextConfirmationPage);
         },
         child: Icon(Icons.arrow_forward_ios),

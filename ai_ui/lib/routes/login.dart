@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:ai_ui/services/router.service.dart';
-import 'package:ai_ui/utils/router.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -12,7 +11,6 @@ import '../models/loginModel.dart';
 import '../utils/error.utils.dart';
 
 import '../constants.dart' as Constants;
-import 'homePage.dart';
 
 class Login extends StatefulWidget {
   @override
