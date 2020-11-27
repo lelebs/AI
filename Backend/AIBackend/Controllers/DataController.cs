@@ -31,5 +31,31 @@ namespace AIBackend.Controllers
                 return BadRequest(ex);
             }
         }
+
+        [HttpGet("obterpesquisas")]
+        public async Task<IActionResult> ObterPesquisas([FromServices] IPesquisaRepositorio pesquisaRepositorio)
+        {
+            try
+            {
+                return Ok(await pesquisaRepositorio.ObterPesquisas());
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("obterpesquisa/{id}")]
+        public async Task<IActionResult> ObterPesquisa(int id, [FromServices] IPesquisaItemRepositorio pesquisaItemRepositorio)
+        {
+            try
+            {
+                return Ok(await pesquisaItemRepositorio.ObterPesquisa(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
     }
 }

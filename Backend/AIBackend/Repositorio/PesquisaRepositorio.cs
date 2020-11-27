@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AIBackend.Dominio.Model;
 using AIBackend.Dominio.Interfaces;
+using System.Collections.Generic;
 
 namespace AIBackend.Repositorio
 {
@@ -24,6 +25,14 @@ namespace AIBackend.Repositorio
                             VALUES (@TextoPesquisa, @IdTipoPesquisa)
                             RETURNING id", model
                     );
+            }
+        }
+
+        public async Task<IList<PesquisaModel>> ObterPesquisas()
+        {
+            using(var conexao = connectionHandler.Create())
+            {
+                return (await conexao.QueryAsync<PesquisaModel>("SELECT * FROM pesquisa")).AsList();
             }
         }
     }
