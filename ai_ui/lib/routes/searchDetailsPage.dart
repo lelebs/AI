@@ -51,7 +51,7 @@ class _SearchDetailsState extends State<SearchDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image(image: NetworkImage(item.urlThumbnail)),
-            _getField('Autores', item.autores.reduce((value, element) => value + ", " + element)),
+            _getField('Autores', item.autores),
             _getField('Título', item.titulo),
             _getField('Sinopse', item.sinopse, lines: 8),
             _getField('Possui PDF disponível', item.isPdfAvailable ? 'Sim' : 'Não'),

@@ -14,7 +14,7 @@
         {
             return new PesquisaItemModel()
             {
-                Autores = string.Join(",", viewModel.Autores),
+                Autores = viewModel.Autores,
                 IsPdfAvailable = viewModel.IsPdfAvailable,
                 Sinopse = viewModel.Sinopse,
                 Titulo = viewModel.Titulo,

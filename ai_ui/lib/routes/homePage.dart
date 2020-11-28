@@ -1,4 +1,10 @@
-import 'package:ai_ui/models/dataModel.dart';
+import 'dart:convert';
+
+import 'package:ai_ui/models/dropDownModel.dart';
+import 'package:ai_ui/models/pesquisaItemModel.dart';
+import 'package:ai_ui/routes/pesquisaResultsPage.dart';
+import 'package:http/http.dart' as Http;
+import 'package:ai_ui/models/pesquisaModel.dart';
 
 import '../constants.dart' as Constants;
 import 'package:ai_ui/services/router.service.dart';
@@ -7,7 +13,9 @@ import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt.instance;
 
-final List<DataModel> listao = [new DataModel('titulozada','descrito')];
+List<PesquisaModel> pesquisasRealizadas = List<PesquisaModel>();
+
+List<DropDownModel> dropDownSource = List.from([new DropDownModel(1, 'Livro'), DropDownModel(2,'Filme')]);
 
 
 class HomePage extends StatelessWidget {
@@ -38,6 +46,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static TextEditingController textController = TextEditingController(text: 'Desenvolvido por: Leandro Gabatel');
   static TextEditingController versionTextController = TextEditingController(text: 'Versão 1.0');
 
+  static Future<dynamic> _getData() async {
+    var httpRequest = await Http.get(Constants.DataAPILink + "obterpesquisas", headers: {"content-type": "application/json; charset=utf-8"});
+    if(httpRequest.statusCode == 200){
+      var body = json.decode(httpRequest.body) as List;
+      pesquisasRealizadas = body.map((e) => PesquisaModel.fromJson(e)).toList();
+    }
+  }
+
   static List<Widget> _widgetOptions = <Widget>[
     Scaffold(
       body: Center(
@@ -55,25 +71,38 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     ),
     Stack(
       children: [
-        new Container(
-          child:
-            ListView.builder(
-              itemCount: listao.length,
-              itemBuilder: (BuildContext context, int index) {  
-                return Stack(children: [
-                  Container(
-                    child: Text(listao[index].titulo),
-                    height: 50,
+        FutureBuilder(
+        future: _getData(),
+        builder: (context, snapshot){
+          if(snapshot.connectionState != ConnectionState.done){
+            return Center(child: CircularProgressIndicator());
+          }
+          else{
+            return ListView.builder(
+              itemCount : pesquisasRealizadas.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Icon(Icons.book),
                   ),
-                  Container(
-                    child: Text(listao[index].descricao),
-                    height: 50,
-                  ),
-                ]);
-              },
-            )
-        )
-      ],
+                  title: Text(pesquisasRealizadas[index].textoPesquisa, style: TextStyle(fontSize: 20.0, color: Colors.black)),
+                  subtitle: Text(dropDownSource.firstWhere((element) => element.id == pesquisasRealizadas[index].idTipoPesquisa).descricao),
+                  onTap: () async {
+                    var idPesquisar = pesquisasRealizadas[index].id;
+                    var httpRequest = await Http.get(Constants.DataAPILink + "obterpesquisa/" + idPesquisar.toString(), headers: {"content-type": "application/json; charset=utf-8"});
+                    if(httpRequest.statusCode == 200){
+                      var bodyRetorno = json.decode(httpRequest.body) as List;
+                      var listaResultados = bodyRetorno.map((e) => PesquisaItem.fromJson(e)).toList();
+                      await Navigator.push(context, new MaterialPageRoute(builder: ((context) => new PesquisaResultsPage(null, presetResults: listaResultados))));
+                    }
+                  },
+                );
+              }
+            );
+          }
+        }
+      )
+    ],
       
     ),
     SingleChildScrollView(

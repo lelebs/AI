@@ -7,7 +7,7 @@ class PesquisaItem {
     this.urlThumbnail
   });
 
-  List<String> autores = List<String>();
+  String autores;
   bool isPdfAvailable;
   String sinopse;
   String titulo;
@@ -15,7 +15,7 @@ class PesquisaItem {
 
   factory PesquisaItem.fromJson(Map<dynamic, dynamic> json){
     return PesquisaItem(
-        autores: (json["autores"] as List).map((e) => e.toString()).toList(),
+        autores: json["autores"] as String,
         isPdfAvailable: json["isPdfAvailable"] as bool,
         sinopse: json["sinopse"] as String,
         titulo: json["titulo"] as String,

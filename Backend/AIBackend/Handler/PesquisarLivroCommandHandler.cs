@@ -33,7 +33,7 @@ namespace AIBackend.Handler
             var result = await query.ExecuteAsync();
             var retorno = result.Items.Select(s => new LivroViewModel()
             {
-                Autores = s.VolumeInfo.Authors,
+                Autores = string.Join(", ", s.VolumeInfo.Authors),
                 IsPdfAvailable = s.SaleInfo.IsEbook ?? false,
                 Sinopse = s.VolumeInfo.Description,
                 Titulo = s.VolumeInfo.Title,
@@ -44,7 +44,7 @@ namespace AIBackend.Handler
             var itens = retorno.Select(s => new PesquisaItemModel()
             {
                 Sinopse = s.Sinopse,
-                Autores = string.Join(", ", s.Autores),
+                Autores = s.Autores,
                 IdPesquisa = pesquisaModel.Id,
                 IsPdfAvailable = s.IsPdfAvailable,
                 Titulo = s.Titulo,

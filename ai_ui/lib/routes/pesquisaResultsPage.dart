@@ -12,20 +12,27 @@ List<PesquisaItem> resultadosPesquisa = new List<PesquisaItem>();
 
 class PesquisaResultsPage extends StatefulWidget{
   final PesquisaCommand command;
-  PesquisaResultsPage(this.command);
+  final List<PesquisaItem> presetResults;
+  PesquisaResultsPage(this.command, {this.presetResults});
   
   @override
   State<StatefulWidget> createState() {
-    return _PesquisaResultsState(this.command);
+    return _PesquisaResultsState(this.command, presetResults: presetResults);
   }
 }
 
 class _PesquisaResultsState extends State<PesquisaResultsPage>{
   final PesquisaCommand pesquisaData;
+  List<PesquisaItem> presetResults;
 
-  _PesquisaResultsState(this.pesquisaData);
+  _PesquisaResultsState(this.pesquisaData, {this.presetResults});
 
   Future<dynamic> _getData() async {
+    if(pesquisaData == null){
+      resultadosPesquisa = presetResults;
+      return;
+    }
+
     var body = pesquisaData.toJson();
     var request = await http.post(Constants.DataAPILink + "pesquisar", body: json.encode(body), headers: {"content-type": "application/json; charset=utf-8"});
     if(request.statusCode != 200){
